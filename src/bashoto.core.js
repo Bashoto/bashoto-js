@@ -3,49 +3,16 @@ if (typeof DEBUG === 'undefined') {
     DEBUG = true;
 }
 
-
-// LIBRARY-GLOBAL CONSTANTS
-//
-// These constants are exposed to all library modules.
-
-
 // GLOBAL is a reference to the global Object.
 var Fn = Function, GLOBAL = new Fn('return this')();
 
-
-// LIBRARY-GLOBAL METHODS
-//
-// The methods here are exposed to all library modules.  Because all of the
-// source files are wrapped within a closure at build time, they are not
-// exposed globally in the distributable binaries.
-
-
 /*global console */
-/**
- * Init wrapper for the core module.
- * @param {Object} The Object that the library gets attached to in
- * library.init.js.  If the library was not loaded with an AMD loader such as
- * require.js, this is the global Object.
- */
 function initBashotoCore (context) {
-
 
     // It is recommended to use strict mode to help make mistakes easier to find.
     'use strict';
 
-
-    // PRIVATE MODULE CONSTANTS
-    //
-
-
-    // An example of a CONSTANT variable;
-
-
-    // PRIVATE MODULE METHODS
-    //
-    // These do not get attached to a prototype.  They are private utility
-    // functions.
-
+    // Format the errrors object properly for locate()
     function getErrorHandlers(errors) {
         var handlers = { error: function(error) { console.log(error); } };
         if (errors.position) {
@@ -69,12 +36,6 @@ function initBashotoCore (context) {
         return handlers;
     }
 
-    /**
-     * This is the constructor for the Bashoto Object.
-     * @param {Object} opt_config Contains any properties that should be used to
-     * configure this instance of the library.
-     * @constructor
-     */
     var Bashoto = context.Bashoto = function (app_key, opts) {
         opts = opts || {};
         this._appKey = app_key;
@@ -107,23 +68,12 @@ function initBashotoCore (context) {
     //
     // These methods define the public API.
 
-
-    /**
-     * An example of a protoype method.
-     * @return {string}
-     */
+    // Get the supplied application key
     Bashoto.prototype.getAppKey = function () {
         return this._appKey;
     };
 
-    Bashoto.prototype.setLocateErrorHandlers = function(handlers) {
-        this.handlers = getErrorHandlers(handlers);
-    };
-
-    /**
-     * An example of a protoype method.
-     * @return {string}
-     */
+    // Use HTML5 Geolocation to associate this object with a location
     Bashoto.prototype.locate = function(options) {
         var opts = options || {};
         var rng = opts.range || Bashoto.LOCAL;
@@ -175,13 +125,6 @@ function initBashotoCore (context) {
             }
         });    
     };
-
-    // DEBUG CODE
-    //
-    // With compiler directives, you can wrap code in a conditional check to
-    // ensure that it does not get included in the compiled binaries.  This is
-    // useful for exposing certain properties and methods that are needed during
-    // development and testing, but should be private in the compiled binaries.
 
     if (DEBUG) {
         //GLOBAL.corePrivateMethod = corePrivateMethod;
