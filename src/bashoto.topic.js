@@ -93,9 +93,9 @@ function initBashotoTopic (context) {
 
     topic.prototype.publish = function(msg) {
         if (typeof(msg) === "object") {
-            msg = JSON.stringify(message);
+            msg = JSON.stringify(msg);
         }
-        if (this._socket.readyState == 0) {
+        if (this._socket.readyState === 0) {
             this._openqueue.push(msg);
         } else {
             this._socket.send(msg);
@@ -147,8 +147,8 @@ function initBashotoTopic (context) {
     // BASHOTO PROTOTYPE METHODS
     //
     //
-    Bashoto.prototype.subscribe = function (handlers, opts) {
-        var opts = opts || {};
+    Bashoto.prototype.subscribe = function (handlers, options) {
+        var opts = options || {};
         if (this._geo) {
             opts.lat = opts.lat || this._geo.latitude;
             opts.lon = opts.lon || this._geo.longitude;

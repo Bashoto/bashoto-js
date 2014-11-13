@@ -1,4 +1,4 @@
-/*! bashoto-js - v0.0.1 - 2014-11-12 - Buck Heroux */
+/*! bashoto-js - v0.0.1 - 2014-11-13 - Buck Heroux */
 ;(function (global) {
 
 // Compiler directive for UglifyJS.  See library.const.js for more info.
@@ -127,47 +127,52 @@ function initBashotoCore (context) {
      * An example of a protoype method.
      * @return {string}
      */
-    Bashoto.prototype.locate = function(range) {
-        var rng = range || Bashoto.LOCAL;
+    Bashoto.prototype.locate = function(options) {
+        var opts = options || {};
+        var rng = opts.range || Bashoto.LOCAL;
+        var success = opts.success || function() {};
+        var errors = getErrorHandlers(opts.errors || {});
+        errors.error = opts.error || errors.error;
         var _bashoto = this;
         if (!navigator.geolocation) {
-            if (this._errorHandlers.unsupported) {
-                this._errorHandlers.unsupported({});
+            if (errors.unsupported) {
+                errors.unsupported({});
             } else {
-                this._errorHandlers.error({});
+                errors.error({message: "The browser does not support Geolocation"});
             }
         }
         navigator.geolocation.getCurrentPosition(function(pos) {
             _bashoto._geo = pos.coords;
             _bashoto._geo.range = rng;
+            success();
         }, function(error) {
             switch(error.code) {
                 case error.PERMISSION_DENIED:
-                    if (_bashoto._errorHandlers.permission) {
-                        _bashoto._errorHandlers.permission(error);
+                    if (errors.permission) {
+                        errors.permission(error);
                     } else {
-                        _bashoto._errorHandlers.error(error);
+                        errors.error(error);
                     }
                     break;
                 case error.POSITION_UNAVAILABLE:
-                    if (_bashoto._errorHandlers.position) {
-                        _bashoto._errorHandlers.permission(error);
+                    if (errors.position) {
+                        errors.permission(error);
                     } else {
-                        _bashoto._errorHandlers.error(error);
+                        errors.error(error);
                     }
                     break;
                 case error.TIMEOUT:
-                    if (_bashoto._errorHandlers.timeout) {
-                        _bashoto._errorHandlers.timeout(error);
+                    if (errors.timeout) {
+                        errors.timeout(error);
                     } else {
-                        _bashoto._errorHandlers.error(error);
+                        errors.error(error);
                     }
                     break;
                 case error.UNKNOWN_ERROR:
-                    if (_bashoto._errorHandlers.unknown) {
-                        _bashoto._errorHandlers.unknown(error);
+                    if (errors.unknown) {
+                        errors.unknown(error);
                     } else {
-                        _bashoto._errorHandlers.error(error);
+                        errors.error(error);
                     }
                     break;
             }
@@ -281,7 +286,10 @@ function initBashotoTopic (context) {
     //};
 
     topic.prototype.publish = function(msg) {
-        if (this._socket.readyState == 0) {
+        if (typeof(msg) === "object") {
+            msg = JSON.stringify(msg);
+        }
+        if (this._socket.readyState === 0) {
             this._openqueue.push(msg);
         } else {
             this._socket.send(msg);
@@ -322,6 +330,9 @@ function initBashotoTopic (context) {
         socket.onmessage = function(msgevt) {
             var message = JSON.parse(msgevt.data);
             var msg = message.msg;
+            try {
+                msg = JSON.parse(message.msg);
+            } catch(e) { /*stays a string*/ }
             _topic._handlers.message(msg);
         };
         return socket;
@@ -330,8 +341,8 @@ function initBashotoTopic (context) {
     // BASHOTO PROTOTYPE METHODS
     //
     //
-    Bashoto.prototype.subscribe = function (handlers, opts) {
-        var opts = opts || {};
+    Bashoto.prototype.subscribe = function (handlers, options) {
+        var opts = options || {};
         if (this._geo) {
             opts.lat = opts.lat || this._geo.latitude;
             opts.lon = opts.lon || this._geo.longitude;

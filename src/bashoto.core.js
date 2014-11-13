@@ -125,7 +125,7 @@ function initBashotoCore (context) {
      * @return {string}
      */
     Bashoto.prototype.locate = function(options) {
-        var opts = options || {}
+        var opts = options || {};
         var rng = opts.range || Bashoto.LOCAL;
         var success = opts.success || function() {};
         var errors = getErrorHandlers(opts.errors || {});
@@ -141,7 +141,7 @@ function initBashotoCore (context) {
         navigator.geolocation.getCurrentPosition(function(pos) {
             _bashoto._geo = pos.coords;
             _bashoto._geo.range = rng;
-            callback();
+            success();
         }, function(error) {
             switch(error.code) {
                 case error.PERMISSION_DENIED:
