@@ -1,0 +1,5 @@
+site_name: Bashoto-JS
+pages:
+- [index.md, Home]
+- [api.md, API]
+theme: readthedocs

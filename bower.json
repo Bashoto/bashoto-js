@@ -1,0 +1,9 @@
+{
+    "name": "bashoto-js",
+    "version": "0.0.1",
+    "main": "./dist/bashoto-js.min.js",
+    "dependencies": {
+        "jquery": "*"
+    },
+    "license": "MIT"
+}
