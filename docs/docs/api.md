@@ -22,7 +22,9 @@ topic.publish("Hey!");
 
 # Bashoto Constructor
 
-    var bashoto = new Bashoto(ApplicationKey, *BashotoOptions*);
+```
+var bashoto = new Bashoto(ApplicationKey, *BashotoOptions*);
+```
 
 Creates a Bashoto object for the account associated with the Application key. 
 This object is used to generate Topics for messaging.
@@ -34,15 +36,57 @@ manage.bashoto.com and specific to your application.
 
 ### **BashotoOptions** *JSON* ***(Optional)***
 
-#### - locate: [*BashotoRange*](api.md#locate) 
+#### - locate: [*LocateOptions*](api.md#locate) 
 
 Calls the locate(range) method during construction and registers the location from 
 the browser to establish local communication. See [locate()](api.md#locate).
 
 
+# Locate
+
+```
+bashoto.locate(*LocateOptions*);
+```
+
+Locates where the client is being accessed from via HTML5 Geolocation. If geolocation was successful,
+any topic that is subscribed to will communicate with other nearby client. If unsuccessful, an error
+handler is executed as defined in BashotoOptions of the constructor. If no handlers are given, the
+error is just logged to the console and new topics will continue to be global. Here is the HTML5 Geolocation
+spec for reference. http://dev.w3.org/geo/api/spec-source.html
+
+### **LocateOptions** *JSON* ***(Optional)***
+
+#### - BashotoRange: *BashotoRange* 
+
+The range of communication with nearby clients. Default is Bashoto.Local which is about neighborhood size.
+
+Possible Range Values:
+
+* **Bashoto.HYPERLOCAL** City Block
+* **Bashoto.LOCAL** *(Default)* Neighborhood
+* **Bashoto.SUBREGIONAL** City
+* **Bashoto.REGIONAL** State
+* **Bashoto.CONTINENTAL** Many States
+* **Bashoto.HEMISPHERE**
+* **Bashoto.GLOBAL**
+
+#### - success: *callback()* 
+
+Function that is called if Geolocation was successful. Useful to delay subscriptions
+until after the user accepts geolocation.
+
+#### - error: *callback(error)* 
+
+Function that is called if Geolocation fails. This function will be the default callback
+for all Geolocation errors and takes precedence over errors.error. The default is to log 
+the error to the console. Each error object has a message property. If different behaviors
+are desired for each different type of possible geolocation error, pass the errors property
+in LocateOptions as detailed below
+
+
 #### - errors: *JSON*
 
-    var opts = { errors.error: function(error) {console.log(error);} };
+    bashoto.locate({ errors.unsupported: function(error) {console.log(error.message);} };
 
 An errors object can be passed with callbacks that are executed when a specific error 
 is raised during the geolocation request. You can handle each error individually or
@@ -74,35 +118,6 @@ An unknown error occured when requesting location.
 
 The current browser does not support HTML5 Geolocation. This is not a standard w3 PositionError, but will still
 contain a message.
-
-
-# Locate
-
-```
-bashoto.locate(*BashotoRange*);
-```
-
-Locates where the client is being accessed from via HTML5 Geolocation. If geolocation was successful,
-any topic that is subscribed to will communicate with other nearby client. If unsuccessful, an error
-handler is executed as defined in BashotoOptions of the constructor. If no handlers are given, the
-error is just logged to the console and new topics will continue to be global. Here is the HTML5 Geolocation
-spec for reference. http://dev.w3.org/geo/api/spec-source.html
-
-
-### **BashotoRange** *BashotoRange* ***(Optional)***
-
-The range of communication with nearby clients. Default is Bashoto.Local which is about neighborhood size.
-
-Possible Range Values:
-
-* **Bashoto.HYPERLOCAL** City Block
-* **Bashoto.LOCAL** *(Default)* Neighborhood
-* **Bashoto.SUBREGIONAL** City
-* **Bashoto.REGIONAL** State
-* **Bashoto.CONTINENTAL** Many States
-* **Bashoto.HEMISPHERE**
-* **Bashoto.GLOBAL**
-
 
 # Subscribe
 

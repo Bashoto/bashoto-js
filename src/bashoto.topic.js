@@ -92,6 +92,9 @@ function initBashotoTopic (context) {
     //};
 
     topic.prototype.publish = function(msg) {
+        if (typeof(msg) === "object") {
+            msg = JSON.stringify(message);
+        }
         if (this._socket.readyState == 0) {
             this._openqueue.push(msg);
         } else {
@@ -133,6 +136,9 @@ function initBashotoTopic (context) {
         socket.onmessage = function(msgevt) {
             var message = JSON.parse(msgevt.data);
             var msg = message.msg;
+            try {
+                msg = JSON.parse(message.msg);
+            } catch(e) { /*stays a string*/ }
             _topic._handlers.message(msg);
         };
         return socket;
