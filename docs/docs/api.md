@@ -1,8 +1,10 @@
 # Bashoto Javascript Library
 
 This is a library for the Bashoto API to enable applications to leverage
-local communication. To use this library registration is required at https://bashoto.com
+local communication. To use this library registration is required at [https://bashoto.com](https://bashoto.com)
 to obtain an ApplicationKey.
+
+[View the source here](https://github.com/Bashoto/bashoto-js) 
 
 ### Usage
 
@@ -25,22 +27,20 @@ topic.publish("Hey!");
 Creates a Bashoto object for the account associated with the Application key. 
 This object is used to generate Topics for messaging.
 
-## Arguments
-
-### Application Key
+### **ApplicationKey** *String*
 
 Key used to connect to the Bashoto Core Messaging service. This comes from 
-manage.bashoto.com
+manage.bashoto.com and specific to your application.
 
-### BashotoOptions (*Optional*)
+### **BashotoOptions** *JSON* ***(Optional)***
 
-#### locate: [BashotoRange](api.md#locate) 
+#### - locate: [*BashotoRange*](api.md#locate) 
 
 Calls the locate(range) method during construction and registers the location from 
 the browser to establish local communication. See [locate()](api.md#locate).
 
 
-#### errors: {}
+#### - errors: *JSON*
 
     var opts = { errors.error: function(error) {console.log(error);} };
 
@@ -50,27 +50,27 @@ just implement the errors.error callback. Each callback is passed an error objec
 a message property. http://dev.w3.org/geo/api/spec-source.html#position_error_interface
 
 
-##### errors.error: callback
+##### -- *errors.error: callback(error)*
 
 Provide a callback for default errors during geolocation. If this is not set. the error is logged to the console.
 
-##### errors.permission: callback
+##### -- *errors.permission: callback(error)*
 
 The location acquisition process failed because the document does not have permission to use the Geolocation API.
 
-##### errors.position: callback
+##### -- *errors.position: callback(error)*
 
 The position of the device could not be determined. For instance, one or more of the location providers used in the location acquisition process reported an internal error that caused the process to fail entirely.
 
-##### errors.timeout: callback
+##### -- *errors.timeout: callback(error)*
 
 The length of time specified by the timeout property has elapsed before the implementation could successfully acquire a new Position object.
 
-##### error.unknown: callback
+##### -- *errors.unknown: callback(error)*
 
 An unknown error occured when requesting location.
 
-##### error.unsupported: callback
+##### -- *errors.unsupported: callback(error)*
 
 The current browser does not support HTML5 Geolocation. This is not a standard w3 PositionError, but will still
 contain a message.
@@ -88,15 +88,15 @@ handler is executed as defined in BashotoOptions of the constructor. If no handl
 error is just logged to the console and new topics will continue to be global. Here is the HTML5 Geolocation
 spec for reference. http://dev.w3.org/geo/api/spec-source.html
 
-## Arguments
 
-### BashotoRange  *Optional*
+### **BashotoRange** *BashotoRange* ***(Optional)***
 
 The range of communication with nearby clients. Default is Bashoto.Local which is about neighborhood size.
-Possible Range Values
+
+Possible Range Values:
 
 * **Bashoto.HYPERLOCAL** City Block
-* **Bashoto.LOCAL** (*Default*) Neighborhood
+* **Bashoto.LOCAL** *(Default)* Neighborhood
 * **Bashoto.SUBREGIONAL** City
 * **Bashoto.REGIONAL** State
 * **Bashoto.CONTINENTAL** Many States
@@ -115,9 +115,7 @@ is associated with the geolocation of the Bashoto object, unless otherwise
 specified. If there is no location associated with the Bashoto object, a global 
 topic is used.
 
-## Arguments
-
-### Handlers
+### **Handlers** *JSON*
 
 Handlers for Topic communication. At the very least implement the message
 handler to communicate with other clients.
@@ -131,41 +129,44 @@ var topic = bashoto.subscribe({
 });
 ```
 
-#### message: callback(msg)
+#### - message: *callback(msg)*
 
 Callback handler for when a message is recieved. This should be implemented. The msg passed
 to your callback will be a string or JSON object depending on how the other client sent it.
 
-#### open: callback(open)
+#### - open: *callback(open)*
 
 An event listener to be called when the Topic connection has connected and been opened; this indicates that the connection is ready to send and receive data.
 
-#### close: callback(close)
+#### - close: *callback(close)*
 
 An event listener to be called when the Topic has been closed by either the server or client. 
 The listener receives a CloseEvent https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent.
 
-#### error: callback(error)
+#### - error: *callback(error)*
 
 An event listener to be called when an error occurs during communication.
 
-### Topic Options (*Optional*)
+### **Topic Options** *JSON* ***(Optional)***
 
 Topic options can be passed to create different topics. The highest level is to create a topic name.
 Topics with different names do not communicate with eachother. This can be used to segment your clients
 on top of the geo-segmentation provided by Bashoto.
 
-#### name: [Slug](https://en.wikipedia.org/wiki/Semantic_URL#Slug)
+#### - name: [*Slug*](https://en.wikipedia.org/wiki/Semantic_URL#Slug)
 
 The name of the topic to bind to. If not supplied, the default name will be used. Two different
 topic names do not communicate with one another. The name should be a [slug style String](https://en.wikipedia.org/wiki/Semantic_URL#Slug) or it will be reformatted to one by lowercase and replacing non-word characters with '-'.
 
-#### lat (double), lon (double), range (see locate)
+#### - lat *double*
+#### - lon *double*
+#### - range *BashotoRange* **([see locate](api.md#locate))**
 
-If all three of these are provided, the topic will be associated with the given location instead
-of associated with the Bashoto objects location.
+If all three of these are provided (lat,lon,range), the topic will be associated with the given location instead
+of associated with the Bashoto objects location. It is recommended to use the bashoto.locate()
+method to bind to topics by location, but passing these arguments will override that.
 
-#### global: Boolean 
+#### - global: *Boolean* 
 
 If global: true is provided, it will overrule all other geo settings for this topic and will bind
 to the global channel for topic communication.
@@ -181,14 +182,12 @@ Publishs a message to the associated topic. This message will not be recieved by
 this Topic object. If messages are published to the Topic before connecting has finished,
 they will be queued up and sent on connection.
 
-## Arguments 
-
-### Message: String or JSON
+### **Message** *String or JSON*
 
 A string that will be distributed to other clients bound to this same topic. If JSON objects
 are passed, they will be distributed to clients as such.
 
-### MessageOptions *Optional*
+### **MessageOptions** *JSON* ***(Optional)***
 
 Currently there are no MessageOptions that are implemented. This is reserved for future use
 to handle different types of messages.
