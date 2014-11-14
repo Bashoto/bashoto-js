@@ -7,7 +7,7 @@ a closed beta program. To participate in the program, sign up at https://bashoto
 
 ## API Documentation
 
-For API Documnetation please see here: http://bashoto-js.readthedocs.org/en/latest/docs/api/ 
+For API Documentation please see here: http://bashoto-js.readthedocs.org/en/latest/docs/api/ 
 
 ### Usage
     var bashoto = new Bashoto("APP-KEY");
@@ -19,6 +19,14 @@ For API Documnetation please see here: http://bashoto-js.readthedocs.org/en/late
     }, {name: "Test"});
     ...
     topic.publish("Hey!");
+
+### JSFiddle
+
+You can fiddle around here http://jsfiddle.net/z7vyL22k/12/
+
+This has two topics that communicate with eachother in the same browser.
+If you access from another nearby device or window, you'll see those messages also,
+but doubled because each topic is recieving them and appending them to the same list.
 
 ## Concepts
 
