@@ -2,7 +2,12 @@
 
 This is a library for the Bashoto API to enable applications to leverage
 local communication. To use this library registration is required at https://bashoto.com
-to obtain an ApplicationKey.
+to obtain an ApplicationKey. Currently ApplicationKeys are being distributed through 
+a closed beta program. To participate in the program, sign up at https://bashoto.com
+
+## API Documentation
+
+For API Documnetation please see here: http://bashoto-js.readthedocs.org/en/latest/docs/api/ 
 
 ### Usage
     var bashoto = new Bashoto("APP-KEY");
@@ -15,7 +20,11 @@ to obtain an ApplicationKey.
     ...
     topic.publish("Hey!");
 
-## API Documentation
+## Concepts
 
-For API Documnetation please see here: http://bashoto-js.readthedocs.org/en/latest/docs/api/ 
+Bashoto implements [a pub/sub architecture](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern)
+where the client subscribes to a Topic based on their location and with options to such as name and range.
+The topic is the communication mechanism for bashoto and is registered with callbacks on how to behave
+when a message is recieved from the topic, when the topic is open, closed and on errors. The topic is
+also used to publish messages to nearby clients that have same topic options. For questions contact support@bashoto.com.
 
