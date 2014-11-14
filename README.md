@@ -22,7 +22,7 @@ For API Documentation please see here: http://bashoto-js.readthedocs.org/en/late
 
 ### JSFiddle
 
-You can fiddle around here http://jsfiddle.net/z7vyL22k/17/
+You can fiddle around here http://jsfiddle.net/z7vyL22k/18/
 
 This has two topics that communicate with eachother in the same browser.
 If you access from another nearby device or window, you'll see those messages also,
