@@ -34,24 +34,15 @@ function initBashotoTopic (context) {
     }
 
     /**
-     * Get the url to connect to.  
-     */
-    function getSocketUrl(appKey, opts) {
-        var params = $.param(opts);
-        return Bashoto.PROTOCOL+Bashoto.HOST+"/io/topic/"+appKey+"?"+params;
-    }
-
-    /**
      * @constructor
      */
     var topic = Bashoto.Topic = function(appKey, handlers, opts) {
         opts = opts || {};
         handlers = handlers || {};
-        this._url = getSocketUrl(appKey, opts);
         this._handlers = getHandlers(handlers);
-        this._socket = this._bindsocket();
         this._openqueue = [];
         this._ons = {};
+        this._bindsocket(appKey, opts);
         return this;
     };
 
@@ -71,7 +62,7 @@ function initBashotoTopic (context) {
         if (typeof(msg) === "object") {
             msg = JSON.stringify(msg);
         }
-        if (this._socket.readyState === 0) {
+        if (!this.isOpen()) {
             this._openqueue.push(msg);
         } else {
             this._socket.send(msg);
@@ -79,45 +70,51 @@ function initBashotoTopic (context) {
     };
 
     topic.prototype.close = function() {
-        this._socket.close();
+        if (this.isOpen()) {
+            this._socket.close();
+        }
     };
 
     topic.prototype.isOpen = function() {
-        return this._socket.readyState === 1;
+        return this._socket && this._socket.readyState === 1;
     };
 
     // PRIVATE TOPIC METHODS
     //
 
-    topic.prototype._bindsocket = function() {
+    topic.prototype._bindsocket = function(appKey, opts) {
         var _topic = this;
-        var socket = new WebSocket(_topic._url);
-        //open
-        socket.onopen = function(msg) {
-            // flush openqueue
-            while(_topic._openqueue.length > 0) {
-                _topic.publish(_topic._openqueue.pop());
-            }
-            _topic._handlers.open(msg);
-        };
-        //close
-        socket.onclose = function(msg) {
-            _topic._handlers.close(msg);
-        };
-        //error
-        socket.onerror = function(msg) {
-            _topic._handlers.error(msg);
-        };
-        //message
-        socket.onmessage = function(msgevt) {
-            var message = JSON.parse(msgevt.data);
-            var msg = message.msg;
-            try {
-                msg = JSON.parse(message.msg);
-            } catch(e) { /*stays a string*/ }
-            _topic._handlers.message(msg);
-        };
-        return socket;
+        var url = Bashoto.HOST+"/io/topic/"+appKey+"?callback=?";
+        $.getJSON(url, function(response) {
+            var ws_url = response.response.url+"?"+$.param(opts); 
+            var socket = new WebSocket(ws_url);
+            //open
+            socket.onopen = function(msg) {
+                // flush openqueue
+                while(_topic._openqueue.length > 0) {
+                    _topic.publish(_topic._openqueue.pop());
+                }
+                _topic._handlers.open(msg);
+            };
+            //close
+            socket.onclose = function(msg) {
+                _topic._handlers.close(msg);
+            };
+            //error
+            socket.onerror = function(msg) {
+                _topic._handlers.error(msg);
+            };
+            //message
+            socket.onmessage = function(msgevt) {
+                var message = JSON.parse(msgevt.data);
+                var msg = message.msg;
+                try {
+                    msg = JSON.parse(message.msg);
+                } catch(e) { /*stays a string*/ }
+                _topic._handlers.message(msg);
+            };
+            _topic._socket = socket;
+        });
     };
 
     // BASHOTO PROTOTYPE METHODS

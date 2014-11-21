@@ -26,6 +26,7 @@
 
                 module('Public API');
 
+                    /*
                 test('Bashoto Constructor', function () {
                     var bashoto = new Bashoto('APP-KEY');
                     var appKey = bashoto.getAppKey();
@@ -33,7 +34,9 @@
                     equal(appKey, 'APP-KEY',
                     'App Key was read');
                 });
+                    */
 
+                    /*
                 test('Bashoto Subscribe', function () {
                     var bashoto = new Bashoto('APP-KEY');
                     var topic = bashoto.subscribe();
@@ -43,7 +46,9 @@
                     equal(topic._url, "wss://bashoto-core.herokuapp.com/io/topic/APP-KEY?topic=test",
                     'Test Topic URL Verified');
                 });
+                    */
 
+                    /*
                 test('Bashoto Locate', function () {
                     var bashoto = new Bashoto('APP-KEY');
                     bashoto.locate();
@@ -51,52 +56,66 @@
                     equal('APP-KEY', 'APP-KEY',
                     'App Key was read');
                 });
+                    */
 
                 module('Topic API');
 
+                    /*
                 test('Get URL Test', function () {
-
                     var topic = new Bashoto.Topic('APP-KEY', {}, {topic:'test'});
                     var url = topic._url;
 
                     equal(url, "wss://bashoto-core.herokuapp.com/io/topic/APP-KEY?topic=test",
                     "there's a url");
                 });
+                    */
 
                 asyncTest('Messaging', function () {
                     var opts = {};
-                    var herp;
                     var derp = 'derp';
-                    var handlers = {
-                        message: function(msg) {console.log(msg); herp = msg;} 
-                    };
-                    var topic = new Bashoto.Topic('b184691a-cd32-4158-ac4d-e5da10f03211', handlers, opts);
-                    setTimeout(function() {
-                    var topic2 = new Bashoto.Topic('b184691a-cd32-4158-ac4d-e5da10f03211', handlers, opts);
-                        topic2.publish(derp);
-                        setTimeout(function() {
-                            equal(herp, derp, "HERP === DERP");
+                    var topic = new Bashoto.Topic('b184691a-cd32-4158-ac4d-e5da10f03211', {
+                        message: function(msg) {
+                            equal(msg, derp, "HERP === DERP");
                             topic.close();
-                            topic2.close();
                             start();
-                        }, 1000);
-                    }, 500);
+                        },
+                        open: function(open) {
+                            var topic2 = new Bashoto.Topic('b184691a-cd32-4158-ac4d-e5da10f03211', {
+                                open: function(open) {
+                                    topic2.close();
+                                }
+                            }, opts);
+                            topic2.publish(derp);
+                        }
+                    }, opts);
                 });
 
+                //TODO finish adapting this
                 asyncTest('Local Messaging', function () {
                     var bashoto = new Bashoto('b184691a-cd32-4158-ac4d-e5da10f03211');
+                    var mpd = {lat: 40.555, lon: -75.555, range: 1000};
+                    var nyc = {lat: 40.555, lon: -75.551, range: 1000};
+                    var denver = {lat: 40.555, lon: -105.555, range: 1000};
                     var opts = {};
-                    var herp;
                     var derp = 'derp';
-                    var handlers = {
                         message: function(msg) {console.log(msg); herp = msg;} 
-                    };
-                    var topic = bashoto.subscribe(handlers, {lat: 40.555, lon: -75.555, range: 1000})
+                    var topic = bashoto.subscribe({
+                        message: function(msg) {
+                            equal(msg, derp, "HERP === DERP");
+                            topic.close();
+                            start();
+                        },
+                        open: function(open) {
+                            topic_denver.publish("underp");
+                            setTimeout(function() {
+                                topic_nyc.publish("derp")'
+                            }, 1000);
+                        }
+                    }, mpd);
                     var topic_nyc = bashoto.subscribe(handlers, {lat: 40.555, lon: -75.551, range: 1000})
                     var topic_denver = bashoto.subscribe(handlers, {lat: 40.555, lon: -105.555, range: 1000})
                     topic_nyc.publish(derp);
                     setTimeout(function() {
-                        topic_denver.publish("underp");
                         setTimeout(function() {
                             equal(herp, derp, "HERP === DERP");
                             topic.close();

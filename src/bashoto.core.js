@@ -46,8 +46,7 @@ function initBashotoCore (context) {
         return this;
     };
 
-    Bashoto.HOST = "bashoto-core.herokuapp.com";
-    Bashoto.PROTOCOL = "wss://";
+    Bashoto.HOST = "https://bashoto.com";
 
     // Block - 100m
     Bashoto.HYPERLOCAL = Math.pow(10,2);
