@@ -1,6 +1,6 @@
 {
     "name": "bashoto-js",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "main": "./dist/bashoto-js.min.js",
     "dependencies": {
         "jquery": "*"

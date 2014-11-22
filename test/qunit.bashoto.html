@@ -81,7 +81,7 @@
                             start();
                         },
                         open: function(open) {
-                            var topic2 = new Bashoto.Topic(TEST_APP_KEY;, {
+                            var topic2 = new Bashoto.Topic(TEST_APP_KEY, {
                                 open: function(open) {
                                     topic2.close();
                                 }
@@ -93,7 +93,7 @@
 
                 //TODO finish adapting this
                 asyncTest('Local Messaging', function () {
-                    var bashoto = new Bashoto(TEST_APP_KEY;);
+                    var bashoto = new Bashoto(TEST_APP_KEY);
                     var mpd = {lat: 40.555, lon: -75.555, range: Bashoto.LOCAL};
                     var nyc = {lat: 40.555, lon: -75.551, range: Bashoto.LOCAL};
                     var denver = {lat: 40.555, lon: -105.555, range: Bashoto.LOCAL};
