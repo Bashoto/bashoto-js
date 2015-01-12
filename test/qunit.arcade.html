@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="qunit/qunit.css" rel="stylesheet" type="text/css" />
+        <script src="qunit/qunit.js"></script>
+        <!-- Add source files here as necessary.  There are the raw source files,
+        and they have not been compiled of wrapped in a closure.  Include them in the
+        order that they should be included in.  If you are following the template's
+        pattern, the init file MUST be loaded last. -->
+        <script src="../vendor/jquery.js"></script>
+        <script src="../src/bashoto.core.js"></script>
+        <script src="../src/bashoto.topic.js"></script>
+        <script src="../src/bashoto.leaderboard.js"></script>
+        <script src="../src/bashoto.init.js"></script>
+        <script>
+        </script>
+    </head>
+    <body>
+        <h1 id="qunit-header">Bashoto Arcade Unit Tests</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+        <div id="qunit-fixture"></div>
+        <script>
+            (function () {
+
+                var TEST_APP_KEY = "135f4565-c1e2-4d4d-bb77-d187f4067917";
+                module('Public API');
+
+                test('Bashoto Constructor', function () {
+                    var bashoto = new Bashoto(TEST_APP_KEY);
+                    var api = bashoto.leaderboard();
+                    api.pull(function(boards) {
+                        console.log(board);
+                    });
+                    equal('APP-KEY', 'APP-KEY',
+                    'App Key was read');
+                });
+            } ());
+        </script>
+    </body>
+</html>

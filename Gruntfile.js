@@ -20,7 +20,8 @@ module.exports = function(grunt) {
   // Add your modules to this list
   // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   var MODULE_LIST = [
-      sub('src/%s.topic.js')
+      sub('src/%s.topic.js'),
+      sub('src/%s.leaderboard.js')
     ];
 
   var DIST_HEAD_LIST = [

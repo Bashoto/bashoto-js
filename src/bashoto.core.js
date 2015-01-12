@@ -125,6 +125,13 @@ function initBashotoCore (context) {
         });    
     };
 
+    Bashoto.prototype.jwt = function(options) {
+        //var secret 
+        //var token 
+
+
+    }
+
     if (DEBUG) {
         //GLOBAL.corePrivateMethod = corePrivateMethod;
     }

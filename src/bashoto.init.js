@@ -1,8 +1,9 @@
-/*global initBashotoCore initBashotoTopic */
+/*global initBashotoCore initBashotoTopic initBashotoLeaderboard*/
 var initBashoto = function (context) {
 
   initBashotoCore(context);
   initBashotoTopic(context);
+  initBashotoLeaderboard(context);
 
   return context.Bashoto;
 };
