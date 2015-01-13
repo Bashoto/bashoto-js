@@ -28,14 +28,45 @@
                 var TEST_APP_KEY = "135f4565-c1e2-4d4d-bb77-d187f4067917";
                 module('Public API');
 
-                test('Bashoto Constructor', function () {
+                asyncTest('Global Push/Pull', function () {
                     var bashoto = new Bashoto(TEST_APP_KEY);
                     var api = bashoto.leaderboard();
                     api.pull(function(boards) {
-                        console.log(board);
+                        var top = boards.global[0].score;
+                        api.push({ player: 'testplayer', score: top+1}, function(boards) {
+                            api.pull(function(boards) {
+                                equal(boards.global[0].score, top+1, 
+                                    'Top score push/pull');
+                                start();
+                            }); 
+                        });
                     });
-                    equal('APP-KEY', 'APP-KEY',
-                    'App Key was read');
+                });
+
+                asyncTest('Local Push/Pull', function () {
+                    var bashoto = new Bashoto(TEST_APP_KEY);
+                    var denver = {lat: 40, lon: -105};
+                    var newyork = {lat: 40, lon: -75};
+                    var den = bashoto.leaderboard(denver);
+                    var nyc = bashoto.leaderboard(newyork);
+                    den.pull(function(boards) {
+                        var top = boards.global[0].score;
+                        den.push({ player: 'denplayer', score: top+1}, function(boards) {
+                            den.pull(function(boards) {
+                                equal(boards.local[0].score, top+1, 
+                                    'Den local score push/pull');
+                            }); 
+                            nyc.push({player: 'nycplayer', score: top-1}, function(boards) {
+                                nyc.pull(function(boards) {
+                                    equal(boards.local[0].score, top-1, 
+                                        'Nyc local score push/pull');
+                                    equal(boards.global[0].score, top+1, 
+                                        'Den global score push/pull');
+                                    start();
+                                });
+                            });
+                        });
+                    });
                 });
             } ());
         </script>

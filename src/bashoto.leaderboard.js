@@ -5,11 +5,13 @@ function initBashotoLeaderboard (context) {
 
     var Bashoto = context.Bashoto;
     var LeaderboardApi = "http://bashoto-arcade.herokuapp.com/api/leaderboard/";
+    var LeaderboardApi = "http://0.0.0.0:5000/api/leaderboard/";
 
     // No-op callback
     function noop() {}
 
 
+    /*
     // Get a formatted handlers obejct
     function getHandlers(hndlrs) {
         //TODO: Add debug and info
@@ -25,6 +27,7 @@ function initBashotoLeaderboard (context) {
         }
         return handlers;
     }
+    */
 
     /**
      * @constructor
@@ -32,33 +35,31 @@ function initBashotoLeaderboard (context) {
     var leaderboard = Bashoto.Leaderboard = function(appKey, handlers, opts) {
         handlers = handlers || {};
         this._opts = opts || {};
-        this._handlers = getHandlers(handlers);
-        this._url = LeaderboardApi + appKey;
+        //this._handlers = getHandlers(handlers);
+        this._url = LeaderboardApi + appKey ;
         return this;
     };
 
-    leaderboard.prototype.push = function(handler, score, options) {
-        var opts = $.extend(options, this._opts);
+    leaderboard.prototype.push = function(score, handler, options) {
         if (!(score.name || score.score)) {
             throw "Score object must contain both attributes 'name' and 'score'";
         }
-        opts = $.extend(opts, score);
-        $.getJSON(this._url, opts, function(data) {
-            handler(data.leaderboard);
-            this._handlers.push(data.leaderboard);
-        }).fail( function(error) {
-            throw error;
+        var opts = $.extend(options || {}, score, this._opts);
+        $.post(this._url, opts, function(data) {
+            handler(data.response.leaderboards);
+            //this._handlers.push(data.leaderboards);
+        }, 'json').fail( function(error) {
+            console.log(error.responseText);
         });
     };
 
     leaderboard.prototype.pull = function(handler, options) {
-        var opts = $.extend(options, this._opts);
-        console.log(opts);
-        $.post(this._url, opts, function(data) {
-            handler(data.leaderboard);
-            this._handlers.pull(data.leaderboard);
-        }, 'json').fail( function(error) {
-            console.log(error.error());
+        var opts = $.extend(options || {}, this._opts);
+        $.getJSON(this._url + '?callback=?', opts, function(data) {
+            handler(data.response.leaderboards);
+            //this._handlers.pull(data.leaderboards);
+        }).fail( function(error) {
+            console.log(error.responseText);
         });
     };
 
