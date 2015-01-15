@@ -28,15 +28,17 @@
                 var TEST_APP_KEY = "135f4565-c1e2-4d4d-bb77-d187f4067917";
                 module('Public API');
 
-                asyncTest('Global Push/Pull', function () {
+                asyncTest('Global Timing Push/Pull', function () {
                     var bashoto = new Bashoto(TEST_APP_KEY);
                     var api = bashoto.leaderboard();
+                    var enter = new Date().getTime();
                     api.pull(function(boards) {
+                        var call_ms = (new Date().getTime() - enter);
                         var top = boards.global[0].score;
                         api.push({ player: 'testplayer', score: top+1}, function(boards) {
                             api.pull(function(boards) {
                                 equal(boards.global[0].score, top+1, 
-                                    'Top score push/pull');
+                                    'Top score push/pull: ' + call_ms + ' ms');
                                 start();
                             }); 
                         });
