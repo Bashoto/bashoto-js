@@ -16,6 +16,7 @@ board.pull(function(scores) {
     alert("Look at these scores! "+scores.local)
 });
 board.push({player: 'player-1', score: 22});
+```
 
 # Bashoto Constructor
 
@@ -33,10 +34,10 @@ manage.bashoto.com and specific to your application.
 
 ### **BashotoOptions** *JSON* ***(Optional)***
 
-#### - locate: [*LocateOptions*](api.md#locate) 
+#### - locate: [*LocateOptions*](arcade.md#locate) 
 
 Calls the locate(range) method during construction and registers the location from 
-the browser to establish local communication. See [locate()](api.md#locate).
+the browser to establish local communication. See [locate()](arcade.md#locate).
 
 
 # Locate
