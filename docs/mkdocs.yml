@@ -1,5 +1,6 @@
 site_name: Bashoto-JS
 pages:
+- [index.md, 'Get Started']
 - [pubsub.md, PubSub]
 - [arcade.md, Arcade]
 theme: readthedocs
