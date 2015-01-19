@@ -1,4 +1,5 @@
 site_name: Bashoto-JS
 pages:
-- [api.md, API]
+- [pubsub.md, PubSub]
+- [arcade.md, Arcade]
 theme: readthedocs

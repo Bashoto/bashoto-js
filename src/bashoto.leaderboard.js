@@ -23,19 +23,21 @@ function initBashotoLeaderboard (context) {
             throw "Score object must contain both attributes 'name' and 'score'";
         }
         var opts = $.extend(options || {}, score, this._opts);
+        handler = handler || noop;
         $.post(this._url, opts, function(data) {
             handler(data.response.leaderboards);
         }, 'json').fail( function(error) {
-            console.log(error.responseText);
+            throw JSON.parse(error.responseText);
         });
     };
 
     leaderboard.prototype.pull = function(handler, options) {
         var opts = $.extend(options || {}, this._opts);
-        $.getJSON(this._url + '?callback=?', opts, function(data) {
+        handler = handler || noop;
+        $.getJSON(this._url, opts, function(data) {
             handler(data.response.leaderboards);
         }).fail( function(error) {
-            console.log(error.responseText);
+            throw JSON.parse(error.responseText);
         });
     };
 
