@@ -36,10 +36,10 @@ manage.bashoto.com and specific to your application.
 
 ### **BashotoOptions** *JSON* ***(Optional)***
 
-#### - locate: [*LocateOptions*](api.md#locate) 
+#### - locate: [*LocateOptions*](pubsub.md#locate) 
 
 Calls the locate(range) method during construction and registers the location from 
-the browser to establish local communication. See [locate()](api.md#locate).
+the browser to establish local communication. See [locate()](pubsub.md#locate).
 
 
 # Locate
@@ -175,7 +175,7 @@ topic names do not communicate with one another. The name should be a [slug styl
 
 #### - lat *double*
 #### - lon *double*
-#### - range *BashotoRange* **([see locate](api.md#locate))**
+#### - range *BashotoRange* **([see locate](pubsub.md#locate))**
 
 If all three of these are provided (lat,lon,range), the topic will be associated with the given location instead
 of associated with the Bashoto objects location. It is recommended to use the bashoto.locate()
