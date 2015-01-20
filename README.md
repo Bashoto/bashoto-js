@@ -5,7 +5,29 @@ local communication. To use this library registration is required at https://bas
 to obtain an ApplicationKey. Currently ApplicationKeys are being distributed through 
 a closed beta program. To participate in the program, sign up at https://bashoto.com
 
-## API Documentation
+## Arcade Documentation
+
+https://github.com/Bashoto/bashoto-js/blob/arcade/docs/docs/arcade.md
+
+These docs are still a work in progress
+
+### Usage
+
+```
+var bashoto = new Bashoto("APP-KEY");
+bashoto.locate({
+    success: function() {
+        var board = bashoto.leaderboard(); 
+        board.pull(function(scores) {
+            alert("Look at these scores! "+scores.local)
+        });
+    }
+});
+...
+board.push({player: 'player-1', score: 22});
+```
+
+## PubSub Documentation
 
 For API Documentation please see here: http://bashoto-js.readthedocs.org/en/latest/docs/api/ 
 

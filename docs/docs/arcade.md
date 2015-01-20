@@ -1,5 +1,7 @@
 # Bashoto ArcadeJavascript Library
 
+These docs are still a work in progress, bit should give you an idea of how things are going to look
+
 This is a library for the Bashoto Arcade API for local leaderboards. 
 To use this library registration is required at [https://arcade.bashoto.com](https://arcade.bashoto.com)
 to obtain an ApplicationKey.
@@ -10,11 +12,15 @@ to obtain an ApplicationKey.
 
 ```
 var bashoto = new Bashoto("APP-KEY");
-bashoto.locate();
-var board = bashoto.leaderboard(); 
-board.pull(function(scores) {
-    alert("Look at these scores! "+scores.local)
+bashoto.locate({
+    success: function() {
+        var board = bashoto.leaderboard(); 
+        board.pull(function(scores) {
+            alert("Look at these scores! "+scores.local)
+        });
+    }
 });
+...
 board.push({player: 'player-1', score: 22});
 ```
 
@@ -158,7 +164,7 @@ Override for any LeaderboardOptions such as board, lat and lon.
 
 # Pull 
 ```
-topic.pull(Handler, PullOptions);
+topic.pull(Handler, *PullOptions*);
 ```
 
 ### **Handler** *callback(scores)*
